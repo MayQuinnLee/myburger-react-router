@@ -28,6 +28,7 @@ const withErrorHandler = (WrappedComponent, axios) => {
             axios.interceptors.request.eject(this.reqInterceptor);
             axios.interceptors.response.eject(this.resInterceptor);
         }
+        //preventing memory leaks
 
         errorConfirmedHandler =() =>{
             this.setState({error:null})
