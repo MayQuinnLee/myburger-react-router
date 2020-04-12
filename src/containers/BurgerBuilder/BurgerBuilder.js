@@ -31,6 +31,8 @@ class BurgerBuilder extends Component {
     }
 
     componentDidMount () {
+        console.log(this.props);
+        //Since BurgerBuilder is part of the routable area, we have access to the match, location, history props
         axios.get("https://myburger-react-64ebe.firebaseio.com/ingredients.json")
             .then(response => {
                 this.setState({ingredients: response.data})
@@ -89,31 +91,19 @@ class BurgerBuilder extends Component {
     }
 
     purchaseContinueHandler = () => {
-        this.setState({loading: true})
-        const order = {
-            ingredients: this.state.ingredients, 
-            price: this.state.totalPrice,
-            customer: {
-                name: 'Jovan Goh',
-                address: {
-                    street: 'TestStreet',
-                    zipCode: 56330,
-                    country: 'Malaysia',
-                },
-                email: 'jojo@test.com',
-            },
-            deliveryMethod: 'ASAP',
+    //  alert('You continue!');
+        const queryParams = [];
+        for (let i in this.state.ingredients) {
+            queryParams.push(encodeURIComponent(i) + '=' +encodeURIComponent(this.state.ingredients[i]));
+            //queryParams key=value
         }
-
-        axios.post('/orders.json', order) //.json for firebase only
-            .then(response => {
-                this.setState({loading: false, purchasing: false});
-                console.log(response);
-            })
-            .catch(error => {
-                this.setState({loading: false, purchasing: false})})
-        // alert('You continue!');
-    };
+        queryParams.push('price='+ this.state.totalPrice);
+        const queryString = queryParams.join('&');
+        this.props.history.push({
+            pathname: '/checkout',
+            search:  '?' + queryString
+        })};
+        //this is only passing into the URL,now we have to pass it into the burger component using ComponentDidMount in Checkoutpage
 
     render () {
         const disabledInfo = {
@@ -159,7 +149,7 @@ class BurgerBuilder extends Component {
         return (
             <Aux>
                 <Modal show={this.state.purchasing} modalClosed={this.purchaseCancelHandler}>
-                    {orderSummary}                  
+                    {orderSummary}              
                 </Modal>
                 {burger}
             </Aux>
