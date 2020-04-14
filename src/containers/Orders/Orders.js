@@ -14,6 +14,7 @@ class Orders extends Component {
             .then(res=>{
                 //firebase will return object and we convert to array
                 const fetchedOrders =[];
+                // console.log(res.data);
                 for(let key in res.data){
                     fetchedOrders.push({
                         ...res.data[key],
@@ -21,7 +22,7 @@ class Orders extends Component {
                     });
                 }
                 console.log(fetchedOrders);
-                this.setState({loading: false})
+                this.setState({loading: false, orders: fetchedOrders})
             })
             .catch(err=>{
                 this.setState({loading: false})
@@ -32,8 +33,13 @@ class Orders extends Component {
 
         return(
             <div>
-                <Order />
-                <Order />
+                {this.state.orders.map(order => ( 
+                    <Order 
+                    key={order.id}
+                    price={+order.price}
+                    ingredients= {order.ingredients} />
+                    ))
+                }
             </div>
         )
     }
