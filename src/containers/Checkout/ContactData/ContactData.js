@@ -1,4 +1,5 @@
 import React , {Component} from 'react';
+import {connect} from 'react-redux';
 
 import Button from '../../../components/UI/Button/Button';
 import classes from './ContactData.module.css';
@@ -18,8 +19,6 @@ class ContactData extends Component {
                 value: '',
                 validation: {
                     required: true,
-                    minLength: 5,
-                    maxLength: 5
                 },
                 valid: false,
                 touched: false
@@ -33,8 +32,6 @@ class ContactData extends Component {
                 value: '',
                 validation: {
                     required: true,
-                    minLength: 5,
-                    maxLength: 5
                 },
                 valid: false,
                 touched: false
@@ -62,9 +59,7 @@ class ContactData extends Component {
                 },
                 value: '',
                 validation: {
-                    required: true,
-                    minLength: 5,
-                    maxLength: 5
+                    required: true
                 },
                 valid: false,
                 touched: false
@@ -78,8 +73,6 @@ class ContactData extends Component {
                 value: '',
                 validation: {
                     required: true,
-                    minLength: 5,
-                    maxLength: 5
                 },
                 valid: false,
                 touched: false
@@ -107,8 +100,8 @@ class ContactData extends Component {
             formData[key]=this.state.orderForm[key].value;
         }
         const order = {
-            ingredients: this.props.ingredients, 
-            price: this.props.price,
+            ingredients: this.props.ings, 
+            price: this.props.totalP,
             orderData: formData}
         axios.post('/orders.json', order) //.json for firebase only
             .then(response => {
@@ -182,5 +175,11 @@ class ContactData extends Component {
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        ings: state.ingredients,
+        totalP: state.totalPrice
+    }
+}
 
-export default ContactData;
+export default connect(mapStateToProps, null)(ContactData);
